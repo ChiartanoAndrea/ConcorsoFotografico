@@ -1,4 +1,4 @@
-import db from "./db.mjs";
+import db from "./data/db.mjs";
 import crypto from 'crypto';
 
 

@@ -5,7 +5,7 @@ import LocalStrategy from 'passport-local';
 import session from 'express-session';
 import getUser from './dao_user.mjs';
 
-import db from './db.mjs';
+import db from './data/db.mjs';
 import cors from 'cors';
 import { ImageList, storeVote, incrementVoteCount, getUserByEmail, createUser } from './dao.mjs';
 import { OAuth2Client } from 'google-auth-library';
@@ -14,19 +14,19 @@ import { OAuth2Client } from 'google-auth-library';
 // init express
 const app = new express();
 app.use(express.json());
-const port = 3001;
+const port = process.env.PORT || 8080;
 
 
 const googleClient = new OAuth2Client("102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleusercontent.com");
 
 
 
-const corsOptions={
-  origin : 'http://localhost:5173',
-  optionsSuccessState:200,
+const corsOptions = {
+  origin: ['http://localhost:5173', 'https://www.il-tuo-sito-su-aruba.it'], // TODO mettere l'url
+  optionsSuccessState: 200,
   credentials: true
-}
-app.use(cors(corsOptions));;
+};
+app.use(cors(corsOptions));
 
 
 passport.use(new LocalStrategy(async function verify(username,password,cb ){
@@ -40,18 +40,26 @@ passport.use(new LocalStrategy(async function verify(username,password,cb ){
   })
 )
 
+app.set('trust proxy', 1);
+
 app.use(session({
-  secret: "secret",
+  secret: process.env.SESSION_SECRET || "una-stringa-segreta-molto-lunga", // Meglio usare le variabili d'ambiente
   resave: false,
   saveUninitialized: false,
+  cookie: {
+    sameSite: 'none', // Permette l'uso cross-domain
+    secure: true,     // Richiede HTTPS (Fly.io lo fornisce in automatico)
+    maxAge: 1000 * 60 * 60 * 24 // Opzionale: durata del cookie (es. 1 giorno)
+  }
 }));
+
 app.use(passport.initialize());
 app.use(passport.session());
 
 
 // activate the server
-app.listen(port, () => {
-  console.log(`Server listening at http://localhost:${port}`);
+app.listen(port, '0.0.0.0', () => {
+  console.log(`Server in ascolto sulla porta ${port}`);
 });
 
 passport.serializeUser(function(user,cb) {//prende dati dell utente per salvare la sessione

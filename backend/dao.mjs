@@ -3,7 +3,7 @@ import {Image,Vote,User} from "./TableModel.mjs";
 import dayjs from "dayjs";
 import express, { response } from "express";
 import e from "express";
-import db from "./db.mjs";
+import db from "./data/db.mjs";
 "use strict";
 
 

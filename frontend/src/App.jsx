@@ -49,7 +49,9 @@ function App() {
   useEffect(()=> {
     const checkAuth= async ()=>{
       try{
-      const user= await API.getCurrentUser();
+      //const user= await API.getCurrentUser(); TODO mock del server
+      
+      const user= null; // TODO: replace with actual API call to check authentication
       if (user && user.id) {
         setLoggedIn(true);
         setUser(user);
