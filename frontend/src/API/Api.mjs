@@ -1,5 +1,4 @@
-const URI = 'http://localhost:3001/api';
-
+const URI = 'https://photocontestbackend.fly.dev/api';
 
 async function logIn(credentials) {
     let url = '';
