@@ -5,12 +5,12 @@ import './index.css'
 import App from './App.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
-const clientId = 'YOUR_GOOGLE_CLIENT_ID';
+const clientId = '102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleusercontent.com';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <GoogleOAuthProvider clientId={"102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleusercontent.com"}>
-      <BrowserRouter >  //TODO: rimettere: basename="/lavori/photo-contest"
+    <GoogleOAuthProvider clientId={clientId}>
+      <BrowserRouter basename="/lavori/photo-contest">
         <App />
       </BrowserRouter>
     </GoogleOAuthProvider>

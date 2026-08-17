@@ -7,6 +7,8 @@ RUN apt-get update && apt-get install -y \
     make \
     g++ \
     sqlite3 \
+    libsqlite3-dev \
+    pkg-config \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
@@ -14,6 +16,7 @@ WORKDIR /app
 # Assegna la porta interna definita in fly.toml
 ENV PORT=8080
 ENV NODE_ENV=production
+ENV npm_config_build_from_source=true
 
 # Copia i file delle dipendenze e installa solo quelle di produzione
 COPY package*.json ./

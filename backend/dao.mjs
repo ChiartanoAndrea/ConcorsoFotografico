@@ -18,23 +18,23 @@ const getImage = (id) =>  new Promise((res, rej) => {
             if (!row)
                 rej("Image not found");
             else {
-                const image = new Image(row.id, row.titolo, row.url);
+                const image = new Image(row.id, row.title, row.url);
                 res(image);
             }
         })
     })
 
-const ImageList = () => new Promise((res, rej) => {
-    const sql = "SELECT * FROM Image";
+// Return images with vote count and whether the given user already voted
+const ImageList = (utente_id = null) => new Promise((res, rej) => {
+    const sql = `SELECT Image.id, Image.title, Image.url,
+        COALESCE((SELECT COUNT(*) FROM Vote v WHERE v.immagine_id = Image.id), 0) AS voti,
+        CASE WHEN ? IS NULL THEN 0 ELSE COALESCE((SELECT COUNT(*) FROM Vote v2 WHERE v2.immagine_id = Image.id AND v2.utente_id = ?), 0) END AS voted
+    FROM Image`;
 
-    db.all(sql, [], (err, rows) => {
-        if (err)
-            rej(err);
-
-        else {
-            const images = rows.map((row) => new Image(row.id, row.titolo, row.url));
-            res(images);
-        }
+    db.all(sql, [utente_id, utente_id], (err, rows) => {
+        if (err) return rej(err);
+        const images = rows.map((row) => ({ id: row.id, title: row.title, url: row.url, voti: row.voti, voted: !!row.voted }));
+        res(images);
     })
 })
 
@@ -50,7 +50,7 @@ const storeVote = (utente_id, immagine_id) => new Promise((res, rej) => {
 })
 
 const incrementVoteCount = (immagine_id) => new Promise((res, rej) => {
-    const sql = "UPDATE Image SET voti = voti + 1 WHERE id=?";
+    const sql = "UPDATE Image SET vote = vote + 1 WHERE id=?";
 
     db.run(sql, [immagine_id], function (err) {
         if (err)

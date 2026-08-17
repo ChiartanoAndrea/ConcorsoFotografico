@@ -4,7 +4,7 @@ import { Card, Button, Row, Col, Spinner } from 'react-bootstrap';
 import API from '../API/Api.mjs';
 
 
-function ImageCard({ image, onVote, voting }) {
+function ImageCard({ image, onVote, voting, alreadyVoted }) {
   return (
     <Card className="h-100 shadow-sm">
       <Card.Img variant="top" src={image.url} alt={image.titolo} style={{ objectFit: 'cover', height: 200 }} />
@@ -13,8 +13,8 @@ function ImageCard({ image, onVote, voting }) {
         <Card.Subtitle className="mb-2 text-muted">Autore: {image.autore || image.name || 'Sconosciuto'}</Card.Subtitle>
         <div className="mt-auto d-flex justify-content-between align-items-center">
           <small className="text-muted">Voti: {image.voti ?? 0}</small>
-          <Button variant="danger" onClick={() => onVote(image.id)} disabled={voting}>
-            {voting ? 'Votando...' : 'Vota'}
+          <Button variant="danger" onClick={() => onVote(image.id)} disabled={voting || alreadyVoted}>
+            {alreadyVoted ? 'Hai già votato' : (voting ? 'Votando...' : 'Vota')}
           </Button>
         </div>
       </Card.Body>
@@ -53,8 +53,11 @@ function ImagesList(props) {
     try {
       await API.voteImage(id);
 
-      // Aggiorna conteggio voti localmente
-      setImages(prev => prev.map(img => img.id === id ? { ...img, voti: (img.voti ?? 0) + 1 } : img));
+      setImages(prev => prev.map(img => 
+        img.id === id 
+          ? { ...img, voti: (img.voti ?? 0) + 1, voted: true } 
+          : img
+      ));
     } catch (err) {
       console.error('Errore durante il voto:', err);
       alert('Impossibile registrare il voto. Assicurati di essere autenticato.');
@@ -75,7 +78,7 @@ function ImagesList(props) {
         <Row xs={1} sm={2} md={3} lg={4} className="g-3">
           {images.map(img => (
             <Col key={img.id}>
-              <ImageCard image={img} onVote={handleVote} voting={votingId === img.id} />
+              <ImageCard image={img} onVote={handleVote} voting={votingId === img.id} alreadyVoted={img.voted} />
             </Col>
           ))}
         </Row>

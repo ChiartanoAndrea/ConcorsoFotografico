@@ -28,7 +28,7 @@ function LoginForm(props) {
                 <Col md={12}>
                     <div className="p-4 shadow-lg rounded-4 bg-light">
                         <h2 className="text-center mb-4">Accedi</h2>
-                        <p className="text-center text-muted mb-4">Scegli il metodo di accesso preferito</p>
+                        <p className="text-center text-muted mb-4">Fai l'accesso con Google</p>
 
                         <div className="d-grid gap-3">
                             <GoogleLogin
@@ -45,14 +45,6 @@ function LoginForm(props) {
                                     setError('Login con Google fallito.');
                                 }}
                             />
-                            <Button
-                                variant="outline-dark"
-                                size="lg"
-                                onClick={() => handleSocialLogin('facebook')}
-                                disabled={isPending}
-                            >
-                                Accedi con Facebook
-                            </Button>
                         </div>
 
                         {error && <p className="text-danger mt-3 text-center">{error}</p>}
