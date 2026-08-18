@@ -78,7 +78,7 @@ function LoginForm(props) {
 
                         {error && <p className="text-danger mt-3 text-center">{error}</p>}
 
-                        <div className="d-flex justify-content-between mt-4">
+                        <div className="d-grid gap-3 mt-4">
                             <Link className="btn btn-danger" to="/" disabled={isPending}>
                                 Annulla
                             </Link>
