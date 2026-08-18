@@ -87,4 +87,56 @@ const createUser = (user) => new Promise((res, rej) => {
     })
 })
 
-export { ImageList, storeVote, incrementVoteCount, getUserByEmail, createUser };
+const getUserVoteCount = (utente_id) => new Promise((res, rej) => {
+    const sql = "SELECT COUNT(*) as count FROM Vote WHERE utente_id = ?";
+
+    db.get(sql, [utente_id], (err, row) => {
+        if (err)
+            rej(err);
+        else
+            res(row?.count || 0);
+    })
+})
+
+const canUserVote = (utente_id) => new Promise((res, rej) => {
+    getUserVoteCount(utente_id)
+        .then(count => {
+            res(count < 3);
+        })
+        .catch(err => rej(err));
+})
+
+const hasUserVoted = (utente_id, immagine_id) => new Promise((res, rej) => {
+    const sql = "SELECT COUNT(*) as count FROM Vote WHERE utente_id = ? AND immagine_id = ?";
+
+    db.get(sql, [utente_id, immagine_id], (err, row) => {
+        if (err)
+            rej(err);
+        else
+            res(row?.count > 0);
+    })
+})
+
+const removeVote = (utente_id, immagine_id) => new Promise((res, rej) => {
+    const sql = "DELETE FROM Vote WHERE utente_id = ? AND immagine_id = ?";
+
+    db.run(sql, [utente_id, immagine_id], function (err) {
+        if (err)
+            rej(err);
+        else
+            res(this.changes);
+    })
+})
+
+const decrementVoteCount = (immagine_id) => new Promise((res, rej) => {
+    const sql = "UPDATE Image SET vote = vote - 1 WHERE id=? AND vote > 0";
+
+    db.run(sql, [immagine_id], function (err) {
+        if (err)
+            rej(err);
+        else
+            res(this.changes);
+    })
+})
+
+export { ImageList, storeVote, incrementVoteCount, getUserByEmail, createUser, getUserVoteCount, canUserVote, hasUserVoted, removeVote, decrementVoteCount };

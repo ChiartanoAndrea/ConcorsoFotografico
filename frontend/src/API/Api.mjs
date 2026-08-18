@@ -80,7 +80,19 @@ async function voteImage(immagine_id) {
     return await res.json();
 }
 
-const API= {logIn,logout,getCurrentUser,getImages,voteImage};
+async function getVotesRemaining() {
+    const res = await fetch(URI + '/voti-rimasti', {
+        credentials: 'include'
+    });
+
+    if (!res.ok) {
+        throw new Error('Errore nel recuperare i voti rimasti');
+    }
+
+    return await res.json();
+}
+
+const API= {logIn,logout,getCurrentUser,getImages,voteImage,getVotesRemaining};
 
 export default API;
   

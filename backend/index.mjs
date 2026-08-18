@@ -6,7 +6,7 @@ import getUser from './dao_user.mjs';
 
 import db from './data/db.mjs';
 import cors from 'cors';
-import { ImageList, storeVote, incrementVoteCount, getUserByEmail, createUser } from './dao.mjs';
+import { ImageList, storeVote, incrementVoteCount, getUserByEmail, createUser, getUserVoteCount, canUserVote, hasUserVoted, removeVote, decrementVoteCount } from './dao.mjs';
 import { OAuth2Client } from 'google-auth-library';
 
 // Inizializzazione express
@@ -17,7 +17,7 @@ const port = process.env.PORT || 8080;
 const googleClient = new OAuth2Client("102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleusercontent.com");
 
 const corsOptions = {
-  origin: ['http://localhost:5173', 'https://www.focusgrafica.it'],
+  origin: ['http://localhost:5173', 'https://www.focusgrafica.it','https://focusgrafica.it',],
   optionsSuccessState: 200,
   credentials: true
 };
@@ -164,7 +164,6 @@ app.get('/api/immagini', async (req, res) => {
     return res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 app.post('/api/vota', isLoggedIn, async (req, res) => {
   const { immagine_id } = req.body;
   const utente_id = req.user?.id;
@@ -174,9 +173,42 @@ app.post('/api/vota', isLoggedIn, async (req, res) => {
   }
 
   try {
-    const voteId = await storeVote(utente_id, immagine_id);
-    await incrementVoteCount(immagine_id);
-    res.status(201).json({ message: 'Vote stored successfully', voteId, utente_id });
+    // Controlla se l'utente ha già votato questa foto
+    const alreadyVoted = await hasUserVoted(utente_id, immagine_id);
+
+    if (alreadyVoted) {
+      // Annulla il voto
+      await removeVote(utente_id, immagine_id);
+      await decrementVoteCount(immagine_id);
+      return res.status(200).json({ message: 'Vote removed successfully', action: 'removed' });
+    } else {
+      // Aggiunge il voto
+      const voteCount = await getUserVoteCount(utente_id);
+      if (voteCount >= 3) {
+        return res.status(403).json({ error: 'Hai raggiunto il massimo di 3 voti' });
+      }
+
+      await storeVote(utente_id, immagine_id);
+      await incrementVoteCount(immagine_id);
+      return res.status(201).json({ message: 'Vote stored successfully', action: 'added' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+app.get('/api/voti-rimasti', isLoggedIn, async (req, res) => {
+  const utente_id = req.user?.id;
+
+  if (!utente_id) {
+    return res.status(400).json({ error: 'Missing user id' });
+  }
+
+  try {
+    const voteCount = await getUserVoteCount(utente_id);
+    const votesRemaining = Math.max(0, 3 - voteCount);
+    res.json({ votesRemaining, votesUsed: voteCount });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Internal server error' });

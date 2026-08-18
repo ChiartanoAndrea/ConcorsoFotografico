@@ -6,11 +6,11 @@ import App from './App.jsx'
 import { GoogleOAuthProvider } from '@react-oauth/google';
 
 const clientId = '102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleusercontent.com';
-
+//basename="/lavori/photo-contest"
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
-      <BrowserRouter basename="/lavori/photo-contest">
+      <BrowserRouter> 
         <App />
       </BrowserRouter>
     </GoogleOAuthProvider>

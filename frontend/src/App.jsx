@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import { Alert, Button, Navbar, Row } from 'react-bootstrap';
-import { Link, Route, Routes, useNavigate,useParams,Outlet, Navigate } from 'react-router';
+import { Alert, Button, Navbar, Row, Container } from 'react-bootstrap';
+import { Link, Route, Routes, useNavigate,useParams,Outlet, Navigate, useLocation } from 'react-router';
 import API from './API/API.mjs';
 import Home from './components/Home.jsx';
 import Login from './components/Login.jsx';
 import ImagesList from './components/Images.jsx';
+import { LogoutButton } from './components/AuthComponents.jsx';
+
 
 function App() {
 
@@ -86,5 +88,6 @@ function App() {
   )
   
 }
+
 
 export default App
