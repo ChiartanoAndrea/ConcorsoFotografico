@@ -10,7 +10,7 @@ const clientId = '102222121516-hck8dl13qmutfialcqmkmrvkfaige4u6.apps.googleuserc
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <GoogleOAuthProvider clientId={clientId}>
-      <BrowserRouter> 
+      <BrowserRouter basename="/lavori/photo-contest"> 
         <App />
       </BrowserRouter>
     </GoogleOAuthProvider>

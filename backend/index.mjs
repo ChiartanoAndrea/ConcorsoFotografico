@@ -19,7 +19,9 @@ const googleClient = new OAuth2Client("102222121516-hck8dl13qmutfialcqmkmrvkfaig
 const corsOptions = {
   origin: ['http://localhost:5173', 'https://www.focusgrafica.it','https://focusgrafica.it',],
   optionsSuccessState: 200,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type']
 };
 app.use(cors(corsOptions));
 
@@ -38,14 +40,16 @@ passport.use(new LocalStrategy(async function verify(username, password, cb) {
 app.set('trust proxy', 1);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "una-stringa-segreta-molto-lunga",
-  resave: false,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: 'none',
-    secure: true,
-    maxAge: 1000 * 60 * 60 * 24
-  }
+ secret: process.env.SESSION_SECRET || "una-stringa-segreta-molto-lunga",
+ resave: false,
+ saveUninitialized: false,
+ cookie: {
+ sameSite: 'lax', // 'lax' è perfetto per i cookie di prima parte
+ domain: '.focusgrafica.it', // Il PUNTO iniziale è vitale: rende il cookie valido per www, api e root
+ secure: true, // Mantiene il requisito dell'HTTPS
+ httpOnly: false,
+ maxAge: 1000 * 60 * 60 * 24 * 7
+ }
 }));
 
 app.use(passport.initialize());
@@ -65,6 +69,12 @@ passport.deserializeUser(function(user, cb) {
 });
 
 const isLoggedIn = (req, res, next) => {
+  console.log('🔐 isLoggedIn check:', {
+    isAuthenticated: req.isAuthenticated(),
+    userId: req.user?.id,
+    sessionId: req.sessionID,
+    cookies: req.headers.cookie
+  });
   if (req.isAuthenticated()) {
     return next();
   }
@@ -133,6 +143,7 @@ app.post('/api/login/google', async (req, res, next) => {
 
     req.login(user, function(err) {
       if (err) return next(err);
+      console.log('✅ Login Google success:', { userId: user.id, email: user.email, sessionID: req.sessionID });
       return res.json(user);
     });
 

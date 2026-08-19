@@ -1,4 +1,4 @@
-const URI = 'https://photocontestbackend.fly.dev/api';
+const URI = 'https://api.focusgrafica.it/api';
 //const URI = 'http://localhost:8080/api';
 
 async function logIn(credentials) {
