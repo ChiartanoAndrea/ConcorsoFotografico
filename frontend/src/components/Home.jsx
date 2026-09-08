@@ -82,6 +82,7 @@ function Home() {
             size="lg" 
             className="fw-bold px-5 py-3 rounded-pill shadow-sm mb-5" 
             onClick={goToLogin}
+            style={{ backgroundColor: '#ba4f38', borderColor: '#ba4f38' }}
           >
             Accedi o Registrati per Votare
           </Button>

@@ -7,7 +7,7 @@ function AppNavbar(props) {
 
 
   return (
-    <Navbar bg="dark" variant="dark" expand="lg" fixed="top">
+    <Navbar style={{ backgroundColor: '#ba4f38' }} variant="dark" expand="lg" fixed="top">
       <Container>
         <Navbar.Brand onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
             Concorso Fotografico

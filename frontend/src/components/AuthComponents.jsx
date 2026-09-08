@@ -55,8 +55,8 @@ function LoginForm(props) {
             <Row className="justify-content-center mt-5">
                 <Col md={12}>
                     <div className="p-4 shadow-lg rounded-4 bg-light">
-                        <h2 className="text-center mb-4">Accedi</h2>
-                        <p className="text-center text-muted mb-4">Fai l'accesso con Google</p>
+                        {/*<h2 className="text-center mb-4">Accedi</h2>*/}
+                        {/*<p className="text-center text-muted mb-4">Fai l'accesso con Google</p>*/}
 
                         <div className="d-grid gap-3">
                             <GoogleLogin
