@@ -15,36 +15,48 @@ function Home() {
   };
 
   return (
-    /* Semplice div contenitore per l'altezza (nessun Container Bootstrap per non vincolare l'header) */
     <div className="vh-100 d-flex flex-column overflow-hidden bg-white w-100">
       
-      {/* HEADER: Usa TUTTA la larghezza dello schermo senza restrizioni */}
+      {/* HEADER: Diviso in 3 blocchi flessibili uguali per centrare perfettamente il logo in mezzo */}
       <header className="w-100 border-bottom py-3 flex-shrink-0">
         <Container fluid className="px-3 px-md-4">
           <div className="d-flex justify-content-between align-items-center w-100">
-            <img 
-              src={logoDonoper} 
-              alt="Un Dono per Castellamonte" 
-              className="img-fluid" 
-              style={{ maxWidth: '28%', maxHeight: '70px', objectFit: 'contain', objectPosition: 'left' }} 
-            />
-            <img 
-              src={iconaCeramica} 
-              alt="Mostra della Ceramica" 
-              className="img-fluid" 
-              style={{ maxWidth: '40%', maxHeight: '90px', objectFit: 'contain' }} 
-            />
-            <img 
-              src={logoComune} 
-              alt="Città di Castellamonte" 
-              className="img-fluid" 
-              style={{ maxWidth: '28%', maxHeight: '70px', objectFit: 'contain', objectPosition: 'right' }} 
-            />
+            
+            {/* Blocco Sinistro */}
+            <div style={{ flex: 1 }} className="d-flex justify-content-start">
+              <img 
+                src={logoDonoper} 
+                alt="Un Dono per Castellamonte" 
+                className="img-fluid" 
+                style={{ maxHeight: '70px', objectFit: 'contain' }} 
+              />
+            </div>
+
+            {/* Blocco Centrale */}
+            <div style={{ flex: 1 }} className="d-flex justify-content-center text-center">
+              <img 
+                src={iconaCeramica} 
+                alt="Mostra della Ceramica" 
+                className="img-fluid" 
+                style={{ maxHeight: '90px', objectFit: 'contain' }} 
+              />
+            </div>
+
+            {/* Blocco Destro */}
+            <div style={{ flex: 1 }} className="d-flex justify-content-end">
+              <img 
+                src={logoComune} 
+                alt="Città di Castellamonte" 
+                className="img-fluid" 
+                style={{ maxHeight: '70px', objectFit: 'contain' }} 
+              />
+            </div>
+
           </div>
         </Container>
       </header>
 
-      {/* MAIN: Usa un Container ristretto (colonna centrata) come volevi */}
+      {/* MAIN: Invariato */}
       <main className="flex-grow-1 w-100 d-flex justify-content-center align-items-center p-3">
         <Container className="d-flex flex-column justify-content-center align-items-center text-center h-100">
           
