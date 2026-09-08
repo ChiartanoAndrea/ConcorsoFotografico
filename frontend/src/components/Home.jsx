@@ -68,10 +68,10 @@ function Home() {
           />
 
           <h1 className="display-4 fw-bold text-dark mb-0 mt-3">
-            Scatti d'Argilla
+            Scatti <span style={{ color: '#ba4f38' }}>d'Argilla</span>
           </h1>
           <h2 
-            className="h5 text-uppercase text-muted fw-bold mb-4 mt-2" 
+            className="h5 text-uppercase text-muted fw-bold mb-2 mt-2" 
             style={{ letterSpacing: '0.15em' }}
           >
             CONCORSO FOTOGRAFICO
@@ -80,7 +80,7 @@ function Home() {
           <Button 
             variant="danger" 
             size="lg" 
-            className="fw-bold px-5 py-3 rounded-pill shadow-sm" 
+            className="fw-bold px-5 py-3 rounded-pill shadow-sm mb-5" 
             onClick={goToLogin}
           >
             Accedi o Registrati per Votare
